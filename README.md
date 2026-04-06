@@ -8,15 +8,16 @@
 
 ---
 
-## 📚 BẢNG MỤC LỤC
-* [Giới thiệu môn học](#giới-thiệu-môn-học)
-* [Giới thiệu đồ án môn học](#giới-thiệu-đồ-án-môn-học)
-* [Thành viên nhóm](#thành-viên-nhóm)
-* [Công nghệ sử dụng](#công-nghệ-sử-dụng)
+## MỤC LỤC
+* [Giới thiệu môn học](#gioi-thieu-mon-hoc)
+* [Giới thiệu đồ án môn học](#gioi-thieu-do-an)
+* [Thành viên nhóm](#thanh-vien)
+* [Công nghệ sử dụng](#cong-nghe)
 
 ---
 
-## 📖 GIỚI THIỆU MÔN HỌC
+<h2 id="gioi-thieu-mon-hoc"> GIỚI THIỆU MÔN HỌC</h2>
+
 * **Tên môn học**: Phát triển ứng dụng trên thiết bị di động - Mobile Application Development  
 * **Mã môn học**: NT118  
 * **Lớp học**: NT118.Q22  
@@ -26,14 +27,16 @@
 
 ---
 
-## 🍳 GIỚI THIỆU ĐỒ ÁN MÔN HỌC
+<h2 id="gioi-thieu-do-an"> GIỚI THIỆU ĐỒ ÁN </h2>
+
 * **Đề tài:** Ứng dụng tìm kiếm và hướng dẫn nấu ăn  
 * **Mô tả:**  
-Ứng dụng hỗ trợ người dùng tìm kiếm công thức nấu ăn, xem hướng dẫn chi tiết và quản lý danh sách món ăn yêu thích.
+Ứng dụng hỗ trợ người dùng tìm kiếm công thức nấu ăn, xem hướng dẫn chi tiết và lưu lại các món ăn yêu thích.
 
 ---
 
-## 👨‍💻 THÀNH VIÊN NHÓM
+<h2 id="thanh-vien"> THÀNH VIÊN NHÓM</h2>
+
 | STT | MSSV | Họ và Tên | Github | Email |
 |-----|:----:|----------|--------|-------|
 | 1 | 23520639 | Nguyễn Trường Huy |  | 23520639@gm.uit.edu.vn |
@@ -42,7 +45,10 @@
 
 ---
 
-## ⚙️ CÔNG NGHỆ SỬ DỤNG
-- Android (Java/Kotlin)
-- Firebase / API
-- Room Database
+<h2 id="cong-nghe"> CÔNG NGHỆ SỬ DỤNG</h2>
+
+- Android (Java/Kotlin)  
+- Firebase / REST API  
+- Room Database  
+
+---
