@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">CookingApp</string>
+    <string name="login_title">Chào mừng quay lại!</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Mật khẩu</string>
+    <string name="btn_login">Đăng nhập</string>
+    <string name="no_account">Chưa có tài khoản? Đăng ký</string>
 </resources>
