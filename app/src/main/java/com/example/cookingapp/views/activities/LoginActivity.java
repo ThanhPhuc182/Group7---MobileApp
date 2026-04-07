@@ -28,7 +28,8 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         txtRegister.setOnClickListener(v -> {
-            // Chuyển sang màn hình Đăng ký
+            android.content.Intent intent = new android.content.Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
         });
     }
 
