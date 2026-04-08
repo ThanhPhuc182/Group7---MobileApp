@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CookingApp">
         <activity
-            android:name=".views.activities.LoginActivity"
+            android:name=".views.activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +25,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".views.activities.MainActivity"
+            android:name=".views.activities.LoginActivity"
             android:exported="false" />
     </application>
 
