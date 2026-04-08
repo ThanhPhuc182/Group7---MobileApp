@@ -7,6 +7,11 @@
 <h1 align="center"><b>NT118.Q22 - PHÁT TRIỂN ỨNG DỤNG TRÊN THIẾT BỊ DI ĐỘNG</b></h1>
 
 ---
+## 📂 Cấu trúc Package:
+- `models/`: Chứa các lớp thực thể (Recipe, User).
+- `views/activities/`: Chứa các màn hình chính (Login, Register, Main).
+- `views/fragments/`: Chứa các Tab của Home (Home, Search, Fav, Profile).
+- `adapters/`: Chứa bộ đổ dữ liệu cho RecyclerView.
 
 ## MỤC LỤC
 * [Giới thiệu môn học](#gioi-thieu-mon-hoc)
