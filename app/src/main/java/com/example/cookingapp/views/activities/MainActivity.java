@@ -4,7 +4,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.example.cookingapp.R;
-import com.example.cookingapp.views.fragments.*; // Import tất cả fragment
+import com.example.cookingapp.views.fragments.*;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,13 +21,17 @@ public class MainActivity extends AppCompatActivity {
 
         // 2. Bắt sự kiện khi bấm vào các icon dưới đáy
         nav.setOnItemSelectedListener(item -> {
-            Fragment f = null;
-            if (item.getItemId() == R.id.it_home) f = new HomeFragment();
-            if (item.getItemId() == R.id.it_search) f = new SearchFragment();
-            if (item.getItemId() == R.id.it_fav) f = new FavoriteFragment();
-            if (item.getItemId() == R.id.it_pro) f = f = new ProfileFragment();
-
-            return loadFragment(f);
+            Fragment fragment = null;
+            if (item.getItemId() == R.id.it_home) {
+                fragment = new HomeFragment();
+            } else if (item.getItemId() == R.id.it_search) {
+                fragment = new SearchFragment();
+            } else if (item.getItemId() == R.id.it_fav) {
+                fragment = new FavoriteFragment();
+            } else if (item.getItemId() == R.id.it_pro) {
+                fragment = new ProfileFragment();
+            }
+            return loadFragment(fragment);
         });
     }
 
