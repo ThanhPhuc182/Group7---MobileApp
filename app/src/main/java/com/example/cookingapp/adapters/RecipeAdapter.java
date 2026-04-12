@@ -31,15 +31,19 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
         Recipe recipe = recipes.get(position);
         holder.tvTitle.setText(recipe.getTitle());
         holder.tvTime.setText(recipe.getTime());
-        // Tạm thời chưa load ảnh từ API, cứ để logo mặc định
     }
 
     @Override
     public int getItemCount() {
-        return recipes.size();
+        return recipes == null ? 0 : recipes.size();
     }
 
-    class RecipeViewHolder extends RecyclerView.ViewHolder {
+    public void updateRecipes(List<Recipe> newRecipes) {
+        this.recipes = newRecipes;
+        notifyDataSetChanged();
+    }
+
+    static class RecipeViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvTime;
         ImageView imgRecipe;
 
