@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.cookingapp.R;
 import com.example.cookingapp.utils.PreferencesHelper;
 import com.example.cookingapp.utils.ValidationUtil;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -17,64 +18,46 @@ public class RegisterActivity extends AppCompatActivity {
     private Button btnRegister;
     private TextView txtBackLogin;
     private PreferencesHelper preferencesHelper;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        preferencesHelper = new PreferencesHelper(this);
-        initViews();
-        setupListeners();
-    }
+        mAuth = FirebaseAuth.getInstance();
 
-    private void initViews() {
-        edtName = findViewById(R.id.edt_reg_name);
         edtEmail = findViewById(R.id.edt_reg_email);
         edtPassword = findViewById(R.id.edt_reg_password);
-        edtConfirmPassword = findViewById(R.id.edt_reg_confirm_password);
         btnRegister = findViewById(R.id.btn_register_submit);
-        txtBackLogin = findViewById(R.id.txt_back_to_login);
-    }
 
-    private void setupListeners() {
-        btnRegister.setOnClickListener(v -> handleRegister());
-        txtBackLogin.setOnClickListener(v -> finish());
-    }
+        btnRegister.setOnClickListener(v -> {
+            String email = edtEmail.getText().toString().trim();
+            String password = edtPassword.getText().toString().trim();
 
-    private void handleRegister() {
-        String name = edtName.getText() != null ? edtName.getText().toString().trim() : "";
-        String email = edtEmail.getText() != null ? edtEmail.getText().toString().trim() : "";
-        String password = edtPassword.getText() != null ? edtPassword.getText().toString().trim() : "";
-        String confirmPassword = edtConfirmPassword.getText() != null ? edtConfirmPassword.getText().toString().trim() : "";
+            if (email.isEmpty() || password.length() < 6) {
+                Toast.makeText(this, "Email không được trống và Pass >= 6 ký tự", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-        edtName.setError(null);
-        edtEmail.setError(null);
-        edtPassword.setError(null);
-        edtConfirmPassword.setError(null);
+            // Gửi dữ liệu lên Firebase
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, task -> {
+                        if (task.isSuccessful()) {
+                            // THÀNH CÔNG: Dữ liệu đã lên Console
+                            Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                            finish(); // Đóng màn hình đăng ký để quay về Login
+                        } else {
+                            // THẤT BẠI: Hiện lỗi (Ví dụ: Email đã tồn tại)
+                            Toast.makeText(RegisterActivity.this, "Lỗi: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    });
+        });
+        TextView txtBackToLogin = findViewById(R.id.txt_back_to_login);
 
-        if (!ValidationUtil.isValidName(name)) {
-            edtName.setError("Tên phải có ít nhất 3 ký tự");
-            return;
-        }
-        if (!ValidationUtil.isValidEmail(email)) {
-            edtEmail.setError("Email không hợp lệ");
-            return;
-        }
-        if (!ValidationUtil.isValidPassword(password)) {
-            edtPassword.setError("Mật khẩu phải có ít nhất 6 ký tự");
-            return;
-        }
-        if (!password.equals(confirmPassword)) {
-            edtConfirmPassword.setError("Mật khẩu không khớp");
-            return;
-        }
-
-        String token = "fake_token_" + System.currentTimeMillis();
-        preferencesHelper.saveUserData(token, name, email);
-
-        Toast.makeText(this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-        finish();
+        // 2. Thiết lập sự kiện đóng màn hình
+        txtBackToLogin.setOnClickListener(v -> {
+            finish(); // Lệnh này sẽ kết thúc RegisterActivity và quay về LoginActivity
+        });
     }
 }
