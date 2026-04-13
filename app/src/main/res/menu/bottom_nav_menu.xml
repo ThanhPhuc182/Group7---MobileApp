@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/it_home" android:title="Trang chủ" android:icon="@android:drawable/ic_menu_directions" />
-    <item android:id="@+id/it_search" android:title="Tủ lạnh" android:icon="@android:drawable/ic_menu_search" />
-    <item android:id="@+id/it_fav" android:title="Yêu thích" android:icon="@android:drawable/btn_star" />
-    <item android:id="@+id/it_pro" android:title="Cá nhân" android:icon="@android:drawable/ic_menu_mylocation" />
-</menu>

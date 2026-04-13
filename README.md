@@ -1,59 +1,26 @@
-<p align="center">
-  <a href="https://www.uit.edu.vn/" title="Trường Đại học Công nghệ Thông tin">
-    <img src="https://i.imgur.com/WmMnSRt.png" alt="Trường Đại học Công nghệ Thông tin | University of Information Technology" width="200">
-  </a>
-</p>
 
-<h1 align="center"><b>NT118.Q22 - PHÁT TRIỂN ỨNG DỤNG TRÊN THIẾT BỊ DI ĐỘNG</b></h1>
+# Tasty Tips
 
----
-## 📂 Cấu trúc Package:
-- `models/`: Chứa các lớp thực thể (Recipe, User).
-- `views/activities/`: Chứa các màn hình chính (Login, Register, Main).
-- `views/fragments/`: Chứa các Tab của Home (Home, Search, Fav, Profile).
-- `adapters/`: Chứa bộ đổ dữ liệu cho RecyclerView.
+With the help of the spoonacular API, users of the Tasty Tips Android app can access recipes based on keywords and browse recipes.
 
-## MỤC LỤC
-* [Giới thiệu môn học](#gioi-thieu-mon-hoc)
-* [Giới thiệu đồ án môn học](#gioi-thieu-do-an)
-* [Thành viên nhóm](#thanh-vien)
-* [Công nghệ sử dụng](#cong-nghe)
+## Features
 
----
+- At least 50 Recipes on the Homepage
+- Users can create, edit update their accounts
+- Similar suggested recipes when opening a recipe
+- Email verification
+- Easy to Use
+- Search recipes by ingredients or title
+- Filter recipes by type of meal
+- Login to your account from any device
+- Completely free and ad-free
+- 
+    
+### Built With
+* [Android Studio](https://developer.android.com/studio/index.html) - The IDE used for development on Android Environment
+* [Gradle](https://gradle.org/) - Built Automation System and Dependency Management
+* [Spoonacular Api](https://spoonacular.com/) - Used to Get Food Recipies
+* [Video](https://youtu.be/cqViyv67les) - Explanation video related to this project 
+## Feedback
 
-<h2 id="gioi-thieu-mon-hoc"> GIỚI THIỆU MÔN HỌC</h2>
-
-* **Tên môn học**: Phát triển ứng dụng trên thiết bị di động - Mobile Application Development  
-* **Mã môn học**: NT118  
-* **Lớp học**: NT118.Q22  
-* **Năm học**: HK2 2025-2026  
-* **Giảng viên hướng dẫn:** ThS. **Trần Hồng Nghi**  
-* **Email:** *nghith@uit.edu.vn*  
-
----
-
-<h2 id="gioi-thieu-do-an"> GIỚI THIỆU ĐỒ ÁN </h2>
-
-* **Đề tài:** Ứng dụng tìm kiếm và hướng dẫn nấu ăn  
-* **Mô tả:**  
-Ứng dụng hỗ trợ người dùng tìm kiếm công thức nấu ăn, xem hướng dẫn chi tiết và lưu lại các món ăn yêu thích.
-
----
-
-<h2 id="thanh-vien"> THÀNH VIÊN NHÓM</h2>
-
-| STT | MSSV | Họ và Tên | Github | Email |
-|-----|:----:|----------|--------|-------|
-| 1 | 23520639 | Nguyễn Trường Huy |  | 23520639@gm.uit.edu.vn |
-| 2 | 23521458 | Ông Vũ Minh Thành |  | 23521458@gm.uit.edu.vn |
-| 3 | 23521211 | Nguyễn Thanh Phúc |  | 23521211@gm.uit.edu.vn |
-
----
-
-<h2 id="cong-nghe"> CÔNG NGHỆ SỬ DỤNG</h2>
-
-- Android (Java/Kotlin)  
-- Firebase / REST API  
-- Room Database  
-
----
+If you have any feedback, please reach out to me at <p align="left"> <a href="mailto:huzaifajaved474@gmail.com" target="blank"><img src="https://img.shields.io/badge/huzaifajaved474-8B89CC?style=for-the-badge&logo=protonmail&logoColor=white" alt="Huzaifa Siddiqui" /></a> </p>
