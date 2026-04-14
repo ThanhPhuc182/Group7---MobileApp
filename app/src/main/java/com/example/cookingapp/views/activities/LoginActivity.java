@@ -2,22 +2,24 @@ package com.example.cookingapp.views.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.cookingapp.R;
 import com.example.cookingapp.utils.PreferencesHelper;
-import com.example.cookingapp.utils.ValidationUtil;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
     // Khai báo các biến tương ứng với ID bên XML
     private EditText edtEmail, edtPassword;
     private Button btnLogin;
-    private TextView txtRegister;
     private PreferencesHelper preferencesHelper;
     private FirebaseAuth mAuth;
 
@@ -27,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
+        preferencesHelper = new PreferencesHelper(this);
 
         edtEmail = findViewById(R.id.edt_email); // Huy nhớ check ID trong XML cho đúng nhé
         edtPassword = findViewById(R.id.edt_password);
@@ -45,6 +48,13 @@ public class LoginActivity extends AppCompatActivity {
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, task -> {
                         if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            String savedEmail = user != null && user.getEmail() != null ? user.getEmail() : email;
+                            String savedName = resolveName(user, savedEmail);
+                            String token = user != null ? user.getUid() : "";
+
+                            preferencesHelper.saveUserData(token, savedName, savedEmail);
+
                             // CHỈ KHI NÀO ĐÚNG: Mới được chuyển màn hình
                             Toast.makeText(LoginActivity.this, "Chào mừng bạn quay lại!", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -68,5 +78,29 @@ public class LoginActivity extends AppCompatActivity {
             // người dùng có thể bấm "Back" quay lại màn hình Login.
         });
     }
-}
 
+    private String resolveName(FirebaseUser user, String email) {
+        if (user != null && !TextUtils.isEmpty(user.getDisplayName())) {
+            return user.getDisplayName();
+        }
+
+        String savedEmail = preferencesHelper.getUserEmail();
+        String savedName = preferencesHelper.getUserName();
+        if (!TextUtils.isEmpty(savedName)
+                && !TextUtils.isEmpty(savedEmail)
+                && savedEmail.equalsIgnoreCase(email)
+                && !isEmailPrefixName(savedName, savedEmail)) {
+            return savedName;
+        }
+
+        return "Nguoi dung";
+    }
+
+    private boolean isEmailPrefixName(String name, String email) {
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || !email.contains("@")) {
+            return false;
+        }
+        String emailPrefix = email.substring(0, email.indexOf('@'));
+        return name.equalsIgnoreCase(emailPrefix);
+    }
+}
