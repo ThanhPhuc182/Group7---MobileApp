@@ -2,7 +2,7 @@ package com.example.cookingapp.models;
 
 import java.util.List;
 
-public class Recipe {
+public class Recipe implements java.io.Serializable {
     private String id;
     private String name;
     private String category;
