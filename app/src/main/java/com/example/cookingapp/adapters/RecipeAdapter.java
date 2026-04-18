@@ -14,12 +14,16 @@ import com.example.cookingapp.models.Recipe;
 import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
-
+    // 1. Khai báo interface để lắng nghe sự kiện click
+    public interface OnItemClickListener {
+        void onItemClick(Recipe recipe);
+    }
     // Thống nhất tên biến là recipes
     private List<Recipe> recipes;
-
-    public RecipeAdapter(List<Recipe> recipes) {
+    private OnItemClickListener listener; // Biến listener
+    public RecipeAdapter(List<Recipe> recipes, OnItemClickListener listener) {
         this.recipes = recipes;
+        this.listener = listener;
     }
 
     @NonNull
@@ -57,6 +61,12 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                 .error(R.drawable.logo_cookingapp) // Ảnh hiện nếu link chết
                 .centerCrop()
                 .into(holder.imgRecipe);
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(recipe);
+            }
+        });
+
     }
 
     @Override

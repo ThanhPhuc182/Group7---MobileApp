@@ -29,6 +29,9 @@
         <activity
             android:name=".views.activities.MainActivity"
             android:exported="false" />
+        <activity
+            android:name=".views.activities.RecipeDetailActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

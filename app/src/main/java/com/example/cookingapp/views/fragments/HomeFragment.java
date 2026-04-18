@@ -1,6 +1,7 @@
 package com.example.cookingapp.views.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,6 +23,7 @@ import com.example.cookingapp.R;
 import com.example.cookingapp.adapters.CategoryAdapter;
 import com.example.cookingapp.adapters.RecipeAdapter;
 import com.example.cookingapp.models.Recipe;
+import com.example.cookingapp.views.activities.RecipeDetailActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -61,7 +63,12 @@ public class HomeFragment extends Fragment {
         setupCategories();
 
         // Khởi tạo Adapter với list trống ban đầu
-        recipeAdapter = new RecipeAdapter(new ArrayList<>());
+        recipeAdapter = new RecipeAdapter(new ArrayList<>(), recipe -> {
+            // Chuyển sang màn hình Chi tiết
+            Intent intent = new Intent(getContext(), RecipeDetailActivity.class);
+            intent.putExtra("recipe_data", recipe); // Gửi cả object Recipe đi
+            startActivity(intent);
+        });
         rvRecipes.setAdapter(recipeAdapter);
 
         // Tải dữ liệu thật từ Firestore

@@ -1,5 +1,6 @@
 package com.example.cookingapp.views.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cookingapp.R;
 import com.example.cookingapp.adapters.RecipeAdapter;
 import com.example.cookingapp.models.Recipe;
+import com.example.cookingapp.views.activities.RecipeDetailActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -43,7 +45,12 @@ public class FavoriteFragment extends Fragment {
         rvFavorites.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Khởi tạo Adapter với list trống
-        recipeAdapter = new RecipeAdapter(new ArrayList<>());
+        recipeAdapter = new RecipeAdapter(new ArrayList<>(), recipe -> {
+            // Khi nhấn vào món ăn trong danh sách yêu thích, cũng mở màn hình chi tiết
+            Intent intent = new Intent(getContext(), RecipeDetailActivity.class);
+            intent.putExtra("recipe_data", recipe);
+            startActivity(intent);
+        });
         rvFavorites.setAdapter(recipeAdapter);
 
         // Tải dữ liệu thật
