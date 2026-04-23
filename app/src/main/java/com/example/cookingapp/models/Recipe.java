@@ -13,6 +13,7 @@ public class Recipe implements java.io.Serializable {
     // Bổ sung thêm 2 trường này để khớp với Firestore của bạn
     private List<String> ingredients;
     private List<String> steps;
+    private int matchScore;
 
     // 1. Bắt buộc phải có Constructor trống cho Firebase
     public Recipe() {}
@@ -57,4 +58,10 @@ public class Recipe implements java.io.Serializable {
 
     public List<String> getSteps() { return steps; }
     public void setSteps(List<String> steps) { this.steps = steps; }
+    public int getMatchScore() {
+        return matchScore;
+    }
+    public void setMatchScore(int matchScore) {
+        this.matchScore = matchScore;
+    }
 }
