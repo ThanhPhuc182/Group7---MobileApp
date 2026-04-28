@@ -124,6 +124,8 @@ public class HomeFragment extends Fragment {
                     // Firebase tự động ép kiểu dữ liệu từ JSON sang Object Recipe
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Recipe recipe = document.toObject(Recipe.class);
+                        // Ensure ID from Firestore document is stored in model
+                        recipe.setId(document.getId());
                         allRecipes.add(recipe);
                     }
 

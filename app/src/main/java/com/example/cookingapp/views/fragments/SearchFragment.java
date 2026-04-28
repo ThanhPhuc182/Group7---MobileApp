@@ -107,6 +107,7 @@ public class SearchFragment extends Fragment {
                     allRecipes.clear();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Recipe recipe = document.toObject(Recipe.class);
+                        recipe.setId(document.getId());
                         allRecipes.add(recipe);
                     }
                     recipeAdapter.setData(new ArrayList<>(allRecipes));

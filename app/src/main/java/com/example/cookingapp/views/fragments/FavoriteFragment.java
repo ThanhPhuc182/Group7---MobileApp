@@ -108,6 +108,7 @@ public class FavoriteFragment extends Fragment {
                     favoriteList.clear();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Recipe recipe = document.toObject(Recipe.class);
+                        recipe.setId(document.getId());
                         recipe.setFavorite(true);
                         favoriteList.add(recipe);
                     }
