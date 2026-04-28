@@ -23,6 +23,7 @@ import com.example.cookingapp.R;
 import com.example.cookingapp.adapters.CategoryAdapter;
 import com.example.cookingapp.adapters.RecipeAdapter;
 import com.example.cookingapp.models.Recipe;
+import com.example.cookingapp.utils.PreferencesHelper;
 import com.example.cookingapp.views.activities.RecipeDetailActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -40,6 +41,7 @@ public class HomeFragment extends Fragment {
 
     private FirebaseFirestore db; // Biến Firestore
     private final List<Recipe> allRecipes = new ArrayList<>();
+    private PreferencesHelper preferencesHelper;
 
     @SuppressLint("MissingInflatedId")
     @Nullable
@@ -53,8 +55,9 @@ public class HomeFragment extends Fragment {
         rvCategories = view.findViewById(R.id.rv_categories);
         progressBar = view.findViewById(R.id.progress_bar); // Đảm bảo bạn có ID này trong XML
 
-        // Khởi tạo Firestore
+        // Khởi tạo Firestore và PreferencesHelper
         db = FirebaseFirestore.getInstance();
+        preferencesHelper = new PreferencesHelper(getContext());
 
         // Cấu hình LayoutManager
         rvRecipes.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -69,6 +72,14 @@ public class HomeFragment extends Fragment {
             intent.putExtra("recipe_data", recipe); // Gửi cả object Recipe đi
             startActivity(intent);
         });
+
+        // Set favorite listener
+        recipeAdapter.setFavoriteListener((recipe, isFavorite) -> {
+            Toast.makeText(getContext(),
+                isFavorite ? "Đã thêm vào yêu thích" : "Đã xóa khỏi yêu thích",
+                Toast.LENGTH_SHORT).show();
+        }, preferencesHelper);
+
         rvRecipes.setAdapter(recipeAdapter);
 
         // Tải dữ liệu thật từ Firestore

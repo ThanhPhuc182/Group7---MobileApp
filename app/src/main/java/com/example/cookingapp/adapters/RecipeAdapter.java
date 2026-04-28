@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.cookingapp.R;
 import com.example.cookingapp.models.Recipe;
+import com.example.cookingapp.utils.PreferencesHelper;
+
 import java.util.List;
 
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> {
@@ -18,12 +20,25 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     public interface OnItemClickListener {
         void onItemClick(Recipe recipe);
     }
+
+    public interface OnFavoriteClickListener {
+        void onFavoriteClick(Recipe recipe, boolean isFavorite);
+    }
+
     // Thống nhất tên biến là recipes
     private List<Recipe> recipes;
     private OnItemClickListener listener; // Biến listener
+    private OnFavoriteClickListener favoriteListener;
+    private PreferencesHelper preferencesHelper;
+
     public RecipeAdapter(List<Recipe> recipes, OnItemClickListener listener) {
         this.recipes = recipes;
         this.listener = listener;
+    }
+
+    public void setFavoriteListener(OnFavoriteClickListener favoriteListener, PreferencesHelper preferencesHelper) {
+        this.favoriteListener = favoriteListener;
+        this.preferencesHelper = preferencesHelper;
     }
 
     @NonNull
@@ -61,12 +76,46 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
                 .error(R.drawable.logo_cookingapp) // Ảnh hiện nếu link chết
                 .centerCrop()
                 .into(holder.imgRecipe);
+
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onItemClick(recipe);
             }
         });
 
+        // Setup favorite button
+        if (holder.imgFavorite != null && preferencesHelper != null) {
+            boolean isFavorite = preferencesHelper.isFavorite(recipe.getId());
+            recipe.setFavorite(isFavorite);
+            updateFavoriteIcon(holder.imgFavorite, isFavorite);
+
+            holder.imgFavorite.setOnClickListener(v -> {
+                boolean currentState = preferencesHelper.isFavorite(recipe.getId());
+                if (currentState) {
+                    preferencesHelper.removeFromFavorites(recipe.getId());
+                    recipe.setFavorite(false);
+                    updateFavoriteIcon(holder.imgFavorite, false);
+                } else {
+                    preferencesHelper.addToFavorites(recipe.getId());
+                    recipe.setFavorite(true);
+                    updateFavoriteIcon(holder.imgFavorite, true);
+                }
+
+                if (favoriteListener != null) {
+                    favoriteListener.onFavoriteClick(recipe, recipe.isFavorite());
+                }
+            });
+        }
+    }
+
+    private void updateFavoriteIcon(ImageView imgFavorite, boolean isFavorite) {
+        if (isFavorite) {
+            imgFavorite.setImageResource(R.drawable.ic_favorite_filled);
+            imgFavorite.setColorFilter(android.graphics.Color.RED);
+        } else {
+            imgFavorite.setImageResource(R.drawable.ic_favorite_border);
+            imgFavorite.setColorFilter(android.graphics.Color.GRAY);
+        }
     }
 
     @Override
@@ -77,7 +126,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
     static class RecipeViewHolder extends RecyclerView.ViewHolder {
         // Đặt tên biến trong Java đồng bộ với XML để dễ quản lý
         TextView tvTitle, tvTime, tvKcal;
-        ImageView imgRecipe;
+        ImageView imgRecipe, imgFavorite;
 
         public RecipeViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -86,6 +135,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
             // Thêm tv_kcal nếu trong layout item_recipe.xml của bạn có hiển thị calo
             tvKcal = itemView.findViewById(R.id.tv_kcal);
             imgRecipe = itemView.findViewById(R.id.img_recipe);
+            imgFavorite = itemView.findViewById(R.id.img_favorite);
         }
     }
 }

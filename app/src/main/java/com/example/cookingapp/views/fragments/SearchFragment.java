@@ -28,6 +28,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cookingapp.R;
 import com.example.cookingapp.adapters.RecipeAdapter;
 import com.example.cookingapp.models.Recipe;
+import com.example.cookingapp.utils.PreferencesHelper;
 import com.example.cookingapp.views.activities.RecipeDetailActivity;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -53,6 +54,7 @@ public class SearchFragment extends Fragment {
     private final List<String> selectedIngredients = new ArrayList<>();
 
     private FirebaseFirestore db;
+    private PreferencesHelper preferencesHelper;
     private final List<Recipe> allRecipes = new ArrayList<>();
 
     // Debounce search to fix Vietnamese typing issue (text disappearing)
@@ -75,9 +77,19 @@ public class SearchFragment extends Fragment {
             intent.putExtra("recipe_data", recipe);
             startActivity(intent);
         });
-        rvSearchResults.setAdapter(recipeAdapter);
 
+        // Khởi tạo Firestore và PreferencesHelper
         db = FirebaseFirestore.getInstance();
+        preferencesHelper = new PreferencesHelper(getContext());
+
+        // Set favorite listener
+        recipeAdapter.setFavoriteListener((recipe, isFavorite) -> {
+            Toast.makeText(getContext(),
+                isFavorite ? "Đã thêm vào yêu thích" : "Đã xóa khỏi yêu thích",
+                Toast.LENGTH_SHORT).show();
+        }, preferencesHelper);
+
+        rvSearchResults.setAdapter(recipeAdapter);
         fetchAllRecipesFromFirestore();
 
         setupSearchInput();

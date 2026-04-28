@@ -13,6 +13,8 @@ public class Recipe implements java.io.Serializable {
     // Bổ sung thêm 2 trường này để khớp với Firestore của bạn
     private List<String> ingredients;
     private List<String> steps;
+    // Thêm trường để check nếu là favorite
+    private transient boolean isFavorite = false;
     private int matchScore;
 
     // 1. Bắt buộc phải có Constructor trống cho Firebase
@@ -58,6 +60,9 @@ public class Recipe implements java.io.Serializable {
 
     public List<String> getSteps() { return steps; }
     public void setSteps(List<String> steps) { this.steps = steps; }
+
+    public boolean isFavorite() { return isFavorite; }
+    public void setFavorite(boolean favorite) { isFavorite = favorite; }
     public int getMatchScore() {
         return matchScore;
     }
