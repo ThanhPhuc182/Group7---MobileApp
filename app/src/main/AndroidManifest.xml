@@ -27,6 +27,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".views.activities.ForgotPasswordActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".views.activities.MainActivity"
             android:exported="false" />
         <activity

@@ -77,6 +77,13 @@ public class LoginActivity extends AppCompatActivity {
             // Lưu ý: KHÔNG gọi finish() ở đây vì mình muốn
             // người dùng có thể bấm "Back" quay lại màn hình Login.
         });
+
+        // Thiết lập sự kiện click cho "Quên mật khẩu?"
+        TextView txtForgotPassword = findViewById(R.id.txt_forgot_password);
+        txtForgotPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent);
+        });
     }
 
     private String resolveName(FirebaseUser user, String email) {
