@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.cookingapp.R;
 import com.example.cookingapp.adapters.RecipeAdapter;
 import com.example.cookingapp.models.Recipe;
+import com.example.cookingapp.utils.PreferencesHelper;
 import com.example.cookingapp.views.activities.RecipeDetailActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -40,6 +41,7 @@ public class SearchFragment extends Fragment {
     private ProgressBar progressBar;
 
     private FirebaseFirestore db;
+    private PreferencesHelper preferencesHelper;
     private final List<Recipe> allRecipes = new ArrayList<>();
 
     @Nullable
@@ -60,10 +62,19 @@ public class SearchFragment extends Fragment {
             intent.putExtra("recipe_data", recipe);
             startActivity(intent);
         });
-        rvSearchResults.setAdapter(recipeAdapter);
 
-        // Khởi tạo Firestore và tải dữ liệu
+        // Khởi tạo Firestore và PreferencesHelper
         db = FirebaseFirestore.getInstance();
+        preferencesHelper = new PreferencesHelper(getContext());
+
+        // Set favorite listener
+        recipeAdapter.setFavoriteListener((recipe, isFavorite) -> {
+            Toast.makeText(getContext(),
+                isFavorite ? "Đã thêm vào yêu thích" : "Đã xóa khỏi yêu thích",
+                Toast.LENGTH_SHORT).show();
+        }, preferencesHelper);
+
+        rvSearchResults.setAdapter(recipeAdapter);
         fetchAllRecipesFromFirestore();
 
         setupSearchInput();
