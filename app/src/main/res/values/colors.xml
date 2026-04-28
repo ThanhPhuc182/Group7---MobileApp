@@ -5,4 +5,5 @@
     <color name="primary_orange">#FF7043</color>
     <color name="bg_light">#F5F5F5</color>
     <color name="text_dark">#212121</color>
+    <color name="text_light">#757575</color>
 </resources>
