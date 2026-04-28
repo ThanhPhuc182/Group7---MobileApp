@@ -15,6 +15,7 @@ public class Recipe implements java.io.Serializable {
     private List<String> steps;
     // Thêm trường để check nếu là favorite
     private transient boolean isFavorite = false;
+    private int matchScore;
 
     // 1. Bắt buộc phải có Constructor trống cho Firebase
     public Recipe() {}
@@ -62,4 +63,10 @@ public class Recipe implements java.io.Serializable {
 
     public boolean isFavorite() { return isFavorite; }
     public void setFavorite(boolean favorite) { isFavorite = favorite; }
+    public int getMatchScore() {
+        return matchScore;
+    }
+    public void setMatchScore(int matchScore) {
+        this.matchScore = matchScore;
+    }
 }
