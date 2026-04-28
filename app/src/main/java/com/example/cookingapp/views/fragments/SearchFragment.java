@@ -91,6 +91,7 @@ public class SearchFragment extends Fragment {
                     allRecipes.clear();
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         Recipe recipe = document.toObject(Recipe.class);
+                        recipe.setId(document.getId());
                         allRecipes.add(recipe);
                     }
                     // Ban đầu hiển thị tất cả món ăn

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.cookingapp.R;
 import com.example.cookingapp.models.Recipe;
+import com.example.cookingapp.views.fragments.CommentsFragment;
 
 public class RecipeDetailActivity extends AppCompatActivity {
     private ImageView imgRecipe;
@@ -31,6 +32,13 @@ public class RecipeDetailActivity extends AppCompatActivity {
 
         if (recipe != null) {
             displayRecipeDetails(recipe);
+
+            // Attach comments fragment into container
+            CommentsFragment f = CommentsFragment.newInstance(recipe.getId());
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.comments_fragment_container, f)
+                    .commitAllowingStateLoss();
         }
         findViewById(R.id.btn_back).setOnClickListener(v -> {
             finish(); // Lệnh này sẽ đóng màn hình hiện tại và quay về màn hình trước đó
@@ -54,7 +62,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         // HIỂN THỊ CÁC BƯỚC LÀM (List -> String)
         StringBuilder stepContent = new StringBuilder();
         for (int i = 0; i < recipe.getSteps().size(); i++) {
-            stepContent.append("Bước ").append(i + 1).append(": ").append(recipe.getSteps().get(i)).append("\n\n");
+            stepContent.append(i + 1).append(". ").append(recipe.getSteps().get(i)).append("\n\n");
         }
         tvSteps.setText(stepContent.toString());
     }
