@@ -5,17 +5,14 @@ plugins {
 
 android {
     namespace 'com.example.cookingapp'
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk 34 // Hạ từ 35 xuống 34 để ổn định hơn
 
     defaultConfig {
         applicationId "com.example.cookingapp"
         minSdk 24
-        targetSdk 36
+        targetSdk 34 // Hạ từ 35 xuống 34
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -32,34 +29,31 @@ android {
 }
 
 dependencies {
-    // Import Firebase BoM (giúp quản lý phiên bản dễ dàng)
+    // Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:33.1.1')
     implementation 'com.google.firebase:firebase-firestore'
-    implementation 'com.github.bumptech.glide:glide:5.0.5'
-    annotationProcessor 'com.github.bumptech.glide:compiler:5.0.5'
-    implementation platform('com.google.firebase:firebase-bom:34.12.0')
     implementation 'com.google.firebase:firebase-analytics'
-    // Thư viện Authentication
     implementation 'com.google.firebase:firebase-auth'
-    // UI - Material Design 3
-    implementation "com.google.android.material:material:1.11.0"
 
-    // Networking - Retrofit (Dùng để gọi API món ăn)
+    // Cập nhật các thư viện UI lên bản ổn định hơn cho SDK 34
+    implementation "com.google.android.material:material:1.12.0"
+    implementation "androidx.appcompat:appcompat:1.7.0"
+    implementation "androidx.constraintlayout:constraintlayout:2.1.4"
+    implementation "androidx.activity:activity:1.9.0"
+
+    // Image Loading - Glide
+    implementation "com.github.bumptech.glide:glide:4.16.0"
+    annotationProcessor "com.github.bumptech.glide:compiler:4.16.0"
+
+    // Networking
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.squareup.retrofit2:converter-gson:2.9.0"
 
-    // Image Loading - Glide (Hiển thị ảnh món ăn)
-    implementation "com.github.bumptech.glide:glide:4.16.0"
-
-    // Local Database - Room
+    // Local Database
     implementation "androidx.room:room-runtime:2.6.1"
     annotationProcessor "androidx.room:room-compiler:2.6.1"
 
-    // Firebase (Chưa thêm vội, đợi bạn Backend gửi file json mới thêm sau)
-    implementation libs.appcompat
-    implementation libs.material
-    implementation libs.activity
-    implementation libs.constraintlayout
-    testImplementation libs.junit
-    androidTestImplementation libs.ext.junit
-    androidTestImplementation libs.espresso.core
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }

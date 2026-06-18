@@ -1,7 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.CookingApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <!-- Base application theme - Đồng bộ với theme sáng (Sử dụng MaterialComponents) -->
+    <style name="Base.Theme.CookingApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Tùy chỉnh màu sắc cho chế độ tối tại đây -->
+        <item name="colorPrimary">@color/primary_orange</item>
+        <item name="colorPrimaryVariant">@color/primary_orange</item>
+        <item name="colorOnPrimary">@color/white</item>
+
+        <!-- Màu nền tối cho app -->
+        <item name="android:windowBackground">@color/black</item>
     </style>
 </resources>

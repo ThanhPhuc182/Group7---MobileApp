@@ -10,17 +10,18 @@ public class Recipe implements java.io.Serializable {
     private int time;
     private int calories;
     private String image_url;
-    // Bổ sung thêm 2 trường này để khớp với Firestore của bạn
     private List<String> ingredients;
     private List<String> steps;
-    // Thêm trường để check nếu là favorite
+    
+    // Summary fields for ratings
+    private double averageRating;
+    private long ratingCount;
+
     private transient boolean isFavorite = false;
     private int matchScore;
 
-    // 1. Bắt buộc phải có Constructor trống cho Firebase
     public Recipe() {}
 
-    // 2. Constructor đầy đủ các trường
     public Recipe(String id, String name, String category, List<String> tags, int time, int calories, String image_url, List<String> ingredients, List<String> steps) {
         this.id = id;
         this.name = name;
@@ -33,7 +34,6 @@ public class Recipe implements java.io.Serializable {
         this.steps = steps;
     }
 
-    // 3. Getters và Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -61,12 +61,14 @@ public class Recipe implements java.io.Serializable {
     public List<String> getSteps() { return steps; }
     public void setSteps(List<String> steps) { this.steps = steps; }
 
+    public double getAverageRating() { return averageRating; }
+    public void setAverageRating(double averageRating) { this.averageRating = averageRating; }
+
+    public long getRatingCount() { return ratingCount; }
+    public void setRatingCount(long ratingCount) { this.ratingCount = ratingCount; }
+
     public boolean isFavorite() { return isFavorite; }
     public void setFavorite(boolean favorite) { isFavorite = favorite; }
-    public int getMatchScore() {
-        return matchScore;
-    }
-    public void setMatchScore(int matchScore) {
-        this.matchScore = matchScore;
-    }
+    public int getMatchScore() { return matchScore; }
+    public void setMatchScore(int matchScore) { this.matchScore = matchScore; }
 }

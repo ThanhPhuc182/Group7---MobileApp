@@ -3,6 +3,7 @@ package com.example.cookingapp.views.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -17,7 +18,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
-    // Khai báo các biến tương ứng với ID bên XML
     private EditText edtEmail, edtPassword;
     private Button btnLogin;
     private PreferencesHelper preferencesHelper;
@@ -26,88 +26,83 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-
+        
+        // Khởi tạo Firebase và Preferences
         mAuth = FirebaseAuth.getInstance();
         preferencesHelper = new PreferencesHelper(this);
 
-        edtEmail = findViewById(R.id.edt_email); // Huy nhớ check ID trong XML cho đúng nhé
+        // Kiểm tra chuyển hướng ngay lập tức nếu đã login
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null && preferencesHelper.isLoggedIn()) {
+            navigateToMain();
+            return;
+        }
+
+        // Đã xóa try-catch để nếu có lỗi layout sẽ báo trực tiếp trong Logcat
+        setContentView(R.layout.activity_login);
+
+        edtEmail = findViewById(R.id.edt_email);
         edtPassword = findViewById(R.id.edt_password);
         btnLogin = findViewById(R.id.btn_login);
 
-        btnLogin.setOnClickListener(v -> {
-            String email = edtEmail.getText().toString().trim();
-            String password = edtPassword.getText().toString().trim();
+        if (btnLogin != null) {
+            btnLogin.setOnClickListener(v -> {
+                String email = edtEmail.getText().toString().trim();
+                String password = edtPassword.getText().toString().trim();
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập đầy đủ!", Toast.LENGTH_SHORT).show();
-                return;
-            }
+                if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+                    Toast.makeText(this, "Vui lòng nhập đầy đủ email và mật khẩu!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-            // Bắt đầu xác thực với Firebase
-            mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, task -> {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            String savedEmail = user != null && user.getEmail() != null ? user.getEmail() : email;
-                            String savedName = resolveName(user, savedEmail);
-                            String token = user != null ? user.getUid() : "";
+                btnLogin.setEnabled(false);
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, task -> {
+                            btnLogin.setEnabled(true);
+                            if (task.isSuccessful()) {
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                if (user != null) {
+                                    String savedEmail = user.getEmail() != null ? user.getEmail() : email;
+                                    String savedName = resolveName(user, savedEmail);
+                                    String token = user.getUid();
+                                    preferencesHelper.saveUserData(token, savedName, savedEmail);
+                                    navigateToMain();
+                                }
+                            } else {
+                                String errorMsg = task.getException() != null ? task.getException().getMessage() : "Lỗi không xác định";
+                                Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: " + errorMsg, Toast.LENGTH_LONG).show();
+                            }
+                        });
+            });
+        }
 
-                            preferencesHelper.saveUserData(token, savedName, savedEmail);
-
-                            // CHỈ KHI NÀO ĐÚNG: Mới được chuyển màn hình
-                            Toast.makeText(LoginActivity.this, "Chào mừng bạn quay lại!", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            // NẾU SAI: Tuyệt đối không được chuyển màn hình
-                            Toast.makeText(LoginActivity.this, "Tài khoản hoặc mật khẩu không đúng", Toast.LENGTH_LONG).show();
-                        }
-                    });
-        });
         TextView txtRegister = findViewById(R.id.txt_register);
+        if (txtRegister != null) {
+            txtRegister.setOnClickListener(v -> {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            });
+        }
 
-        // 2. Thiết lập sự kiện click để chuyển màn hình
-        txtRegister.setOnClickListener(v -> {
-            // Tạo một Intent để đi từ LoginActivity sang RegisterActivity
-            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-            startActivity(intent);
-
-            // Lưu ý: KHÔNG gọi finish() ở đây vì mình muốn
-            // người dùng có thể bấm "Back" quay lại màn hình Login.
-        });
-
-        // Thiết lập sự kiện click cho "Quên mật khẩu?"
         TextView txtForgotPassword = findViewById(R.id.txt_forgot_password);
-        txtForgotPassword.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
-            startActivity(intent);
-        });
+        if (txtForgotPassword != null) {
+            txtForgotPassword.setOnClickListener(v -> {
+                Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+                startActivity(intent);
+            });
+        }
+    }
+
+    private void navigateToMain() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private String resolveName(FirebaseUser user, String email) {
         if (user != null && !TextUtils.isEmpty(user.getDisplayName())) {
             return user.getDisplayName();
         }
-
-        String savedEmail = preferencesHelper.getUserEmail();
-        String savedName = preferencesHelper.getUserName();
-        if (!TextUtils.isEmpty(savedName)
-                && !TextUtils.isEmpty(savedEmail)
-                && savedEmail.equalsIgnoreCase(email)
-                && !isEmailPrefixName(savedName, savedEmail)) {
-            return savedName;
-        }
-
-        return "Nguoi dung";
-    }
-
-    private boolean isEmailPrefixName(String name, String email) {
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || !email.contains("@")) {
-            return false;
-        }
-        String emailPrefix = email.substring(0, email.indexOf('@'));
-        return name.equalsIgnoreCase(emailPrefix);
+        return "Người dùng";
     }
 }

@@ -33,9 +33,16 @@
         <activity
             android:name=".views.activities.MainActivity"
             android:exported="false" />
+
         <activity
             android:name=".views.activities.RecipeDetailActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".views.activities.MealPlannerActivity"
+            android:exported="false"
+            android:label="Kế hoạch ăn uống" />
+
     </application>
 
 </manifest>
