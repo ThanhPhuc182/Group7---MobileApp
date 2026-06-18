@@ -16,13 +16,14 @@ import androidx.fragment.app.Fragment;
 import com.example.cookingapp.R;
 import com.example.cookingapp.utils.PreferencesHelper;
 import com.example.cookingapp.views.activities.LoginActivity;
+import com.example.cookingapp.views.activities.MealPlannerActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class ProfileFragment extends Fragment {
 
     private TextView tvUserName, tvUserEmail;
-    private Button btnLogout;
+    private Button btnLogout, btnMealPlanner;
     private PreferencesHelper preferencesHelper;
 
     @Nullable
@@ -33,9 +34,15 @@ public class ProfileFragment extends Fragment {
         preferencesHelper = new PreferencesHelper(requireContext());
         tvUserName = view.findViewById(R.id.tv_user_name);
         tvUserEmail = view.findViewById(R.id.tv_user_email);
+        btnMealPlanner = view.findViewById(R.id.btn_meal_planner);
         btnLogout = view.findViewById(R.id.btn_logout);
 
         bindUserInfo();
+
+        btnMealPlanner.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), MealPlannerActivity.class);
+            startActivity(intent);
+        });
 
         btnLogout.setOnClickListener(v -> {
             preferencesHelper.clearUserData();

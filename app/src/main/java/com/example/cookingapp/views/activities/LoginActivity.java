@@ -24,72 +24,73 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        // Kiểm tra nếu user đã đăng nhập thì vào thẳng Main
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        
+        // Khởi tạo Firebase và Preferences
+        mAuth = FirebaseAuth.getInstance();
+        preferencesHelper = new PreferencesHelper(this);
+
+        // Kiểm tra chuyển hướng ngay lập tức nếu đã login
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null && preferencesHelper.isLoggedIn()) {
             navigateToMain();
+            return;
         }
-    }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        // Đã xóa try-catch để nếu có lỗi layout sẽ báo trực tiếp trong Logcat
         setContentView(R.layout.activity_login);
-
-        mAuth = FirebaseAuth.getInstance();
-        preferencesHelper = new PreferencesHelper(this);
 
         edtEmail = findViewById(R.id.edt_email);
         edtPassword = findViewById(R.id.edt_password);
         btnLogin = findViewById(R.id.btn_login);
 
-        btnLogin.setOnClickListener(v -> {
-            String email = edtEmail.getText().toString().trim();
-            String password = edtPassword.getText().toString().trim();
+        if (btnLogin != null) {
+            btnLogin.setOnClickListener(v -> {
+                String email = edtEmail.getText().toString().trim();
+                String password = edtPassword.getText().toString().trim();
 
-            if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-                Toast.makeText(this, "Vui lòng nhập đầy đủ email và mật khẩu!", Toast.LENGTH_SHORT).show();
-                return;
-            }
+                if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+                    Toast.makeText(this, "Vui lòng nhập đầy đủ email và mật khẩu!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-            // Bắt đầu xác thực với Firebase
-            btnLogin.setEnabled(false); // Tránh bấm nhiều lần
-            mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, task -> {
-                        btnLogin.setEnabled(true);
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            if (user != null) {
-                                String savedEmail = user.getEmail() != null ? user.getEmail() : email;
-                                String savedName = resolveName(user, savedEmail);
-                                String token = user.getUid();
-
-                                preferencesHelper.saveUserData(token, savedName, savedEmail);
-
-                                Toast.makeText(LoginActivity.this, "Chào mừng bạn quay lại!", Toast.LENGTH_SHORT).show();
-                                navigateToMain();
+                btnLogin.setEnabled(false);
+                mAuth.signInWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this, task -> {
+                            btnLogin.setEnabled(true);
+                            if (task.isSuccessful()) {
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                if (user != null) {
+                                    String savedEmail = user.getEmail() != null ? user.getEmail() : email;
+                                    String savedName = resolveName(user, savedEmail);
+                                    String token = user.getUid();
+                                    preferencesHelper.saveUserData(token, savedName, savedEmail);
+                                    navigateToMain();
+                                }
+                            } else {
+                                String errorMsg = task.getException() != null ? task.getException().getMessage() : "Lỗi không xác định";
+                                Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: " + errorMsg, Toast.LENGTH_LONG).show();
                             }
-                        } else {
-                            String errorMsg = task.getException() != null ? task.getException().getMessage() : "Lỗi không xác định";
-                            Log.e("LoginActivity", "Login failed: " + errorMsg);
-                            Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: " + errorMsg, Toast.LENGTH_LONG).show();
-                        }
-                    });
-        });
+                        });
+            });
+        }
 
         TextView txtRegister = findViewById(R.id.txt_register);
-        txtRegister.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-            startActivity(intent);
-        });
+        if (txtRegister != null) {
+            txtRegister.setOnClickListener(v -> {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            });
+        }
 
         TextView txtForgotPassword = findViewById(R.id.txt_forgot_password);
-        txtForgotPassword.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
-            startActivity(intent);
-        });
+        if (txtForgotPassword != null) {
+            txtForgotPassword.setOnClickListener(v -> {
+                Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+                startActivity(intent);
+            });
+        }
     }
 
     private void navigateToMain() {
@@ -102,24 +103,6 @@ public class LoginActivity extends AppCompatActivity {
         if (user != null && !TextUtils.isEmpty(user.getDisplayName())) {
             return user.getDisplayName();
         }
-
-        String savedEmail = preferencesHelper.getUserEmail();
-        String savedName = preferencesHelper.getUserName();
-        if (!TextUtils.isEmpty(savedName)
-                && !TextUtils.isEmpty(savedEmail)
-                && savedEmail.equalsIgnoreCase(email)
-                && !isEmailPrefixName(savedName, savedEmail)) {
-            return savedName;
-        }
-
         return "Người dùng";
-    }
-
-    private boolean isEmailPrefixName(String name, String email) {
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || !email.contains("@")) {
-            return false;
-        }
-        String emailPrefix = email.substring(0, email.indexOf('@'));
-        return name.equalsIgnoreCase(emailPrefix);
     }
 }
