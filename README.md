@@ -44,9 +44,9 @@
 
 | STT | MSSV | Họ và Tên | Github | Email |
 |-----|:----:|----------|--------|-------|
-| 1 | 23520639 | Nguyễn Trường Huy |  | 23520639@gm.uit.edu.vn |
-| 2 | 23521458 | Ông Vũ Minh Thành |  | 23521458@gm.uit.edu.vn |
-| 3 | 23521211 | Nguyễn Thanh Phúc |  | 23521211@gm.uit.edu.vn |
+| 1 | 23520639 | Nguyễn Trường Huy | huynguyen1703 | 23520639@gm.uit.edu.vn |
+| 2 | 23521458 | Ông Vũ Minh Thành | thanh5587 | 23521458@gm.uit.edu.vn |
+| 3 | 23521211 | Nguyễn Thanh Phúc | ThanhPhuc182 | 23521211@gm.uit.edu.vn |
 
 ---
 
@@ -55,5 +55,3 @@
 - Android (Java/Kotlin)  
 - Firebase / REST API  
 - Room Database  
-
----

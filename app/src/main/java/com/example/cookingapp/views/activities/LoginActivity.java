@@ -3,7 +3,6 @@ package com.example.cookingapp.views.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -34,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
         // Kiểm tra chuyển hướng ngay lập tức nếu đã login
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null && preferencesHelper.isLoggedIn()) {
+            preferencesHelper.syncUserFromFirebase();
             navigateToMain();
             return;
         }
@@ -62,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 if (user != null) {
+                                    preferencesHelper.syncUserFromFirebase();
                                     String savedEmail = user.getEmail() != null ? user.getEmail() : email;
                                     String savedName = resolveName(user, savedEmail);
                                     String token = user.getUid();
