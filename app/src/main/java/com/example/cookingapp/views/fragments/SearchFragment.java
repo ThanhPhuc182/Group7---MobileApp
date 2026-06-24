@@ -171,25 +171,112 @@ public class SearchFragment extends Fragment {
         return pattern.matcher(temp).replaceAll("").replace('đ', 'd').replace('Đ', 'D');
     }
 
+    private String normalizeSynonyms(String input) {
+        if (input == null) return "";
+        String output = input.toLowerCase();
+
+        // 1. Nhóm Thịt
+        output = output.replaceAll("\\blon\\b", "heo");
+        output = output.replaceAll("\\bba roi\\b", "ba chi");
+
+        // 2. Nhóm Rau củ & Quả
+        output = output.replaceAll("\\bmuop dang\\b", "kho qua");
+        output = output.replaceAll("\\bsup lo\\b", "bong cai");
+        output = output.replaceAll("\\bdau co ve\\b", "dau que");
+        output = output.replaceAll("\\bcove\\b", "dau que");
+        output = output.replaceAll("\\bcai chip\\b", "cai thia");
+
+        // 3. Nhóm Thơm / Dứa / Khóm (Do DB của bạn có cả "Thơm" và "Dứa", ta quy hết về "dua")
+        output = output.replaceAll("\\bthom\\b", "dua");
+        output = output.replaceAll("\\bkhom\\b", "dua");
+
+        // 4. Nhóm Đậu phụ & Đồ gia vị
+        output = output.replaceAll("\\bdau phu\\b", "dau hu");
+        output = output.replaceAll("\\bdau phong\\b", "lac");
+        output = output.replaceAll("\\bnuoc tuong\\b", "xi dau");
+
+        // 5. Nhóm Cá
+        output = output.replaceAll("\\bca qua\\b", "ca loc");
+        output = output.replaceAll("\\bca trau\\b", "ca loc");
+
+        return output;
+    }
+    //  Thuật toán Levenshtein tính độ lệch ký tự
+    private int computeLevenshteinDistance(String x, String y) {
+        int[][] dp = new int[x.length() + 1][y.length() + 1];
+        for (int i = 0; i <= x.length(); i++) {
+            for (int j = 0; j <= y.length(); j++) {
+                if (i == 0) {
+                    dp[i][j] = j;
+                } else if (j == 0) {
+                    dp[i][j] = i;
+                } else {
+                    dp[i][j] = Math.min(Math.min(
+                                    dp[i - 1][j] + 1,
+                                    dp[i][j - 1] + 1),
+                            dp[i - 1][j - 1] + (x.charAt(i - 1) == y.charAt(j - 1) ? 0 : 1)
+                    );
+                }
+            }
+        }
+        return dp[x.length()][y.length()];
+    }
+
+    // Hàm kiểm tra khớp từ
+    private boolean isFuzzyMatch(String queryWord, String recipeWord) {
+        if (recipeWord.startsWith(queryWord)) {
+            return true;
+        }
+
+        int len = queryWord.length();
+        if (len <= 3) return false;
+
+        int distance = computeLevenshteinDistance(queryWord, recipeWord);
+
+        if (len <= 5) return distance <= 1;
+        return distance <= 2;
+    }
+
     private void performSearch() {
         if (edtSearchQuery == null) return;
-        
+
         String originalQuery = edtSearchQuery.getText().toString().trim().toLowerCase();
+
         String queryNoAccent = removeAccent(originalQuery);
+        String normalizedQuery = normalizeSynonyms(queryNoAccent);
+
+        String[] queryWords = normalizedQuery.split("\\s+");
 
         List<Recipe> filteredRecipes = new ArrayList<>();
 
         for (Recipe recipe : allRecipes) {
-            // TÌM THEO TÊN
             String name = recipe.getName();
             if (name == null) continue;
-            
-            String recipeName = name.toLowerCase();
-            String recipeNameNoAccent = removeAccent(recipeName);
+
+            String recipeNameNoAccent = removeAccent(name.toLowerCase());
+            String normalizedRecipeName = normalizeSynonyms(recipeNameNoAccent);
+
+            String[] recipeWords = normalizedRecipeName.split("\\s+");
 
             boolean matchesName = true;
+
             if (!TextUtils.isEmpty(originalQuery)) {
-                matchesName = recipeName.contains(originalQuery) || recipeNameNoAccent.contains(queryNoAccent);
+
+                for (String qWord : queryWords) {
+                    boolean foundMatchForThisWord = false;
+
+                    for (String rWord : recipeWords) {
+                        if (isFuzzyMatch(qWord, rWord)) {
+                            foundMatchForThisWord = true;
+                            break;
+                        }
+                    }
+
+                    if (!foundMatchForThisWord) {
+                        matchesName = false;
+                        break;
+                    }
+                }
             }
 
             // SMART FRIDGE
@@ -200,9 +287,9 @@ public class SearchFragment extends Fragment {
                 List<String> recipeIngredients = recipe.getIngredients();
                 if (recipeIngredients != null) {
                     for (String selected : selectedIngredients) {
-                        String selectedNoAccent = removeAccent(selected);
+                        String selectedNoAccent = normalizeSynonyms(removeAccent(selected));
                         for (String dbIng : recipeIngredients) {
-                            if (dbIng != null && removeAccent(dbIng.toLowerCase()).contains(selectedNoAccent)) {
+                            if (dbIng != null && normalizeSynonyms(removeAccent(dbIng.toLowerCase())).contains(selectedNoAccent)) {
                                 currentScore++;
                                 break;
                             }
