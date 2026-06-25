@@ -74,6 +74,7 @@ public class CommentsFragment extends Fragment {
 
         repository = new CommentRepository();
         preferencesHelper = new PreferencesHelper(getContext());
+        preferencesHelper.syncUserFromFirebase();
 
         if (getArguments() != null) recipeId = getArguments().getString(ARG_RECIPE_ID);
 
@@ -96,6 +97,7 @@ public class CommentsFragment extends Fragment {
             Toast.makeText(getContext(), "Vui lòng nhập nhận xét", Toast.LENGTH_SHORT).show();
             return;
         }
+        preferencesHelper.syncUserFromFirebase();
         String userId = preferencesHelper.getUserToken();
         String userName = preferencesHelper.getUserName();
 

@@ -18,7 +18,6 @@ import com.example.cookingapp.utils.PreferencesHelper;
 import com.example.cookingapp.views.activities.LoginActivity;
 import com.example.cookingapp.views.activities.MealPlannerActivity;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class ProfileFragment extends Fragment {
 
@@ -57,43 +56,19 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        bindUserInfo();
+    }
+
     private void bindUserInfo() {
+        preferencesHelper.syncUserFromFirebase();
+
         String userName = preferencesHelper.getUserName();
         String userEmail = preferencesHelper.getUserEmail();
 
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            String firebaseName = currentUser.getDisplayName();
-            String firebaseEmail = currentUser.getEmail();
-
-            if (!TextUtils.isEmpty(firebaseName)) {
-                userName = firebaseName;
-            }
-
-            if (!TextUtils.isEmpty(firebaseEmail)) {
-                userEmail = firebaseEmail;
-            }
-
-            if (isEmailPrefixName(userName, userEmail)) {
-                userName = "";
-            }
-
-            preferencesHelper.saveUserData(
-                    currentUser.getUid(),
-                    TextUtils.isEmpty(userName) ? "Nguoi dung" : userName,
-                    TextUtils.isEmpty(userEmail) ? "" : userEmail
-            );
-        }
-
-        tvUserName.setText(TextUtils.isEmpty(userName) ? "Nguoi dung" : userName);
+        tvUserName.setText(TextUtils.isEmpty(userName) ? "Người dùng" : userName);
         tvUserEmail.setText(TextUtils.isEmpty(userEmail) ? "user@example.com" : userEmail);
-    }
-
-    private boolean isEmailPrefixName(String name, String email) {
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || !email.contains("@")) {
-            return false;
-        }
-        String emailPrefix = email.substring(0, email.indexOf('@'));
-        return name.equalsIgnoreCase(emailPrefix);
     }
 }

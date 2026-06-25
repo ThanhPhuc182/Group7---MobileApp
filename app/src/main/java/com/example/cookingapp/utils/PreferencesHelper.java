@@ -2,6 +2,10 @@ package com.example.cookingapp.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -28,6 +32,29 @@ public class PreferencesHelper {
                 .putString(KEY_USER_NAME, name)
                 .putString(KEY_USER_EMAIL, email)
                 .apply();
+    }
+
+    /**
+     * Refresh local session from Firebase to prevent stale profile data.
+     */
+    public void syncUserFromFirebase() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            return;
+        }
+
+        String token = user.getUid();
+        String email = user.getEmail() == null ? "" : user.getEmail();
+        String displayName = user.getDisplayName();
+
+        if (TextUtils.isEmpty(displayName) && !TextUtils.isEmpty(email) && email.contains("@")) {
+            displayName = email.substring(0, email.indexOf('@'));
+        }
+        if (TextUtils.isEmpty(displayName)) {
+            displayName = "Người dùng";
+        }
+
+        saveUserData(token, displayName, email);
     }
 
     public boolean isLoggedIn() {

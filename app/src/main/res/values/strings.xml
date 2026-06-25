@@ -27,4 +27,8 @@
     <string name="reset_email_sent">Email đặt lại mật khẩu đã được gửi! Vui lòng kiểm tra hộp thư của bạn.</string>
     <string name="email_not_found">Email này không tồn tại trong hệ thống</string>
     <string name="forgot_password_link">Quên mật khẩu?</string>
+
+    <string name="ai_tips_title">Mẹo AI cho món này</string>
+    <string name="ai_tips_button">Tạo gợi ý</string>
+    <string name="ai_tips_placeholder">Nhấn "Tạo gợi ý" để nhận mẹo nấu nhanh, thay thế nguyên liệu và lưu ý khi nấu.</string>
 </resources>

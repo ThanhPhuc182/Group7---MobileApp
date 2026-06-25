@@ -105,6 +105,48 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="@string/ai_tips_title"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_ai_tips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/ai_tips_button"
+                    app:cornerRadius="12dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    app:cardBackgroundColor="#F9F9F9"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="#E0E0E0"
+                    app:strokeWidth="1dp">
+
+                    <TextView
+                        android:id="@+id/tv_ai_tips_result"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="6dp"
+                        android:padding="16dp"
+                        android:text="@string/ai_tips_placeholder"
+                        android:textColor="#424242"
+                        android:textSize="15sp" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp" />
+
                 <!-- Comments fragment container -->
                 <FrameLayout
                     android:id="@+id/comments_fragment_container"
